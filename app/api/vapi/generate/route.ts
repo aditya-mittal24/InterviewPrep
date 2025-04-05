@@ -1,4 +1,5 @@
 import { db } from "@/firebase/admin";
+import { getCurrentUser } from "@/lib/actions/auth.action";
 import { getRandomInterviewCover } from "@/lib/utils";
 import { google } from "@ai-sdk/google";
 import { generateText } from "ai";
@@ -8,7 +9,9 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  const { type, role, level, techstack, amount, userId } = await request.json();
+  const { type, role, level, techstack, amount } = await request.json();
+  const user = await getCurrentUser();
+  const userId = user?.id;
 
   try {
     const { text: questions } = await generateText({

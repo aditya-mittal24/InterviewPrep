@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -7,17 +7,16 @@ import { vapi } from "@/lib/vapi.sdk";
 import { interviewer } from "@/constants";
 
 enum CallStatus {
-    INACTIVE = "INACTIVE",
-    CONNECTING = "CONNECTING",
-    ACTIVE = "ACTIVE",
-    FINISHED = "FINISHED",
-  }
-  
-interface SavedMessage {
-    role: "user" | "system" | "assistant";
-    content: string;
+  INACTIVE = "INACTIVE",
+  CONNECTING = "CONNECTING",
+  ACTIVE = "ACTIVE",
+  FINISHED = "FINISHED",
 }
 
+interface SavedMessage {
+  role: "user" | "system" | "assistant";
+  content: string;
+}
 
 const Agent = ({
   userName,
@@ -27,12 +26,11 @@ const Agent = ({
   type,
   questions,
 }: AgentProps) => {
-    const router = useRouter();
+  const router = useRouter();
   const [callStatus, setCallStatus] = useState<CallStatus>(CallStatus.INACTIVE);
   const [isSpeaking, setIsSpeaking] = useState(false);
-  const [messages, setMessages] = useState([]);
-//   const [messages, setMessages] = useState<SavedMessage[]>([]);
-    const [lastMessage, setLastMessage] = useState<string>("");
+  const [messages, setMessages] = useState<SavedMessage[]>([]);
+  // const [lastMessage, setLastMessage] = useState<string>("");
 
   useEffect(() => {
     const onCallStart = () => {
@@ -83,25 +81,25 @@ const Agent = ({
 
   useEffect(() => {
     if (messages.length > 0) {
-    //   setLastMessage(messages[messages.length - 1].content);
+      //   setLastMessage(messages[messages.length - 1].content);
     }
 
     const handleGenerateFeedback = async (messages: SavedMessage[]) => {
       console.log("handleGenerateFeedback");
 
-    //   const { success, feedbackId: id } = await createFeedback({
-    //     interviewId: interviewId!,
-    //     userId: userId!,
-    //     transcript: messages,
-    //     feedbackId,
-    //   });
+      //   const { success, feedbackId: id } = await createFeedback({
+      //     interviewId: interviewId!,
+      //     userId: userId!,
+      //     transcript: messages,
+      //     feedbackId,
+      //   });
 
-    //   if (success && id) {
-    //     router.push(`/interview/${interviewId}/feedback`);
-    //   } else {
-    //     console.log("Error saving feedback");
-    //     router.push("/");
-    //   }
+      //   if (success && id) {
+      //     router.push(`/interview/${interviewId}/feedback`);
+      //   } else {
+      //     console.log("Error saving feedback");
+      //     router.push("/");
+      //   }
     };
 
     if (callStatus === CallStatus.FINISHED) {
@@ -144,7 +142,9 @@ const Agent = ({
     vapi.stop();
   };
 
-  const isCallInactiveOrFinished = callStatus==='INACTIVE' || callStatus==='FINISHED';
+  const lastMessage = messages[messages.length - 1]?.content;
+  const isCallInactiveOrFinished =
+    callStatus === "INACTIVE" || callStatus === "FINISHED";
 
   return (
     <>
@@ -163,7 +163,6 @@ const Agent = ({
           </div>
           <h3>AI Interviewer</h3>
         </div>
-
 
         <div className="card-border">
           <div className="card-content">
@@ -197,9 +196,7 @@ const Agent = ({
 
       <div className="w-full flex justify-center">
         {callStatus !== "ACTIVE" ? (
-          <button className="relative btn-call" 
-          onClick={() => handleCall()}
-          >
+          <button className="relative btn-call" onClick={handleCall}>
             <span
               className={cn(
                 "absolute animate-ping rounded-full opacity-75",
@@ -208,15 +205,11 @@ const Agent = ({
             />
 
             <span className="relative">
-              {callStatus === "INACTIVE" || callStatus === "FINISHED"
-                ? "Call"
-                : ". . ."}
+              {isCallInactiveOrFinished ? "Call" : ". . ."}
             </span>
           </button>
         ) : (
-          <button className="btn-disconnect" 
-          onClick={() => handleDisconnect()}
-          >
+          <button className="btn-disconnect" onClick={handleDisconnect}>
             End
           </button>
         )}
